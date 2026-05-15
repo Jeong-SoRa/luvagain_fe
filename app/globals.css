@@ -4,34 +4,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
 
-:root {
-  --foreground-rgb: 30, 20, 25;
-  --background-start-rgb: 255, 248, 249;
-  --background-end-rgb: 255, 255, 255;
-}
-
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-end-rgb));
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
   font-family: 'Noto Sans KR', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
   .gradient-text {
     background: linear-gradient(135deg, #e11d48 0%, #f59e0b 100%);
     -webkit-background-clip: text;
@@ -43,27 +30,7 @@ body {
     background: linear-gradient(135deg, #e11d48 0%, #f59e0b 100%);
   }
 
-  .card-hover {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  .flex-2 {
+    flex: 2 2 0%;
   }
-
-  .card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15);
-  }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #fda4af;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #e11d48;
 }
