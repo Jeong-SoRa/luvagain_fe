@@ -21,78 +21,73 @@ export default function DiscoverScreen({
     setTimeout(() => {
       setAction(null);
       setIndex((i) => i + 1);
-      if (type === "like" && current) {
-        const isMatch = current.matchScore >= 90;
-        if (isMatch) onMatch(current);
+      if (type === "like" && current && current.matchScore >= 90) {
+        onMatch(current);
       }
-    }, 350);
+    }, 320);
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-[#F8F7F6]">
       {/* Header */}
-      <div className="px-5 pt-10 pb-3 bg-white flex items-center justify-between">
+      <div className="px-5 pt-10 pb-3 bg-white flex items-center justify-between border-b border-gray-100">
         <div>
-          <h1 className="text-xl font-black text-gray-900">
-            <span className="gradient-text">LoveAgain</span>
-          </h1>
-          <p className="text-xs text-gray-400">오늘의 추천 {profiles.length}명</p>
+          <h1 className="text-lg font-bold text-gray-900">LoveAgain</h1>
+          <p className="text-xs text-gray-400 mt-0.5">오늘의 추천 {profiles.length}명</p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="w-9 h-9 rounded-full bg-rose-50 flex items-center justify-center text-base">
+          <button className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm text-gray-500">
             🔔
           </button>
-          <button className="w-9 h-9 rounded-full bg-rose-50 flex items-center justify-center text-base">
+          <button className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm text-gray-500">
             ⚙️
           </button>
         </div>
       </div>
 
-      {/* Progress dots */}
-      <div className="flex gap-1.5 justify-center py-2">
+      {/* Progress */}
+      <div className="flex gap-1 px-5 py-2.5">
         {profiles.map((_, i) => (
           <div
             key={i}
-            className={`h-1 rounded-full transition-all ${
-              i < index ? "bg-rose-300 w-3" : i === index ? "bg-rose-500 w-5" : "bg-gray-200 w-3"
+            className={`h-0.5 flex-1 rounded-full transition-all ${
+              i < index ? "bg-[#C2185B]/40" : i === index ? "bg-[#C2185B]" : "bg-gray-200"
             }`}
           />
         ))}
       </div>
 
       {/* Card stack */}
-      <div className="flex-1 relative px-4 pb-2 flex items-center">
+      <div className="flex-1 relative px-4 pt-1 pb-2 flex items-center">
         {done ? (
           <div className="w-full flex flex-col items-center justify-center gap-3 py-10 text-center">
-            <span className="text-5xl">🌸</span>
-            <p className="font-bold text-gray-800 text-lg">오늘의 추천을 모두 봤어요</p>
+            <span className="text-4xl">🌸</span>
+            <p className="font-semibold text-gray-700 text-base">오늘의 추천을 모두 봤어요</p>
             <p className="text-gray-400 text-sm">내일 새로운 분들을 소개해드릴게요</p>
             <button
               onClick={() => setIndex(0)}
-              className="mt-2 gradient-bg text-white font-semibold px-6 py-3 rounded-2xl text-sm"
+              className="mt-2 bg-[#C2185B] text-white font-semibold px-6 py-2.5 rounded-xl text-sm"
             >
               다시 보기
             </button>
           </div>
         ) : (
           <div className="relative w-full" style={{ height: 400 }}>
-            {/* Back card */}
             {next && (
-              <div className="absolute inset-x-3 top-3 bottom-0 rounded-3xl bg-white shadow-sm border border-gray-100 overflow-hidden">
+              <div className="absolute inset-x-3 top-3 bottom-0 rounded-2xl bg-white shadow-sm border border-gray-100 overflow-hidden">
                 <CardContent profile={next} mini />
               </div>
             )}
-            {/* Front card */}
             <div
-              className={`absolute inset-0 rounded-3xl bg-white shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 ${
-                action === "like" ? "translate-x-12 rotate-6 opacity-0" :
-                action === "pass" ? "-translate-x-12 -rotate-6 opacity-0" : ""
+              className={`absolute inset-0 rounded-2xl bg-white shadow-md border border-gray-100 overflow-hidden transition-all duration-300 ${
+                action === "like"
+                  ? "translate-x-10 rotate-3 opacity-0"
+                  : action === "pass"
+                  ? "-translate-x-10 -rotate-3 opacity-0"
+                  : ""
               }`}
             >
-              <CardContent
-                profile={current}
-                onTap={() => onViewProfile(current)}
-              />
+              <CardContent profile={current} onTap={() => onViewProfile(current)} />
             </div>
           </div>
         )}
@@ -100,30 +95,32 @@ export default function DiscoverScreen({
 
       {/* Action buttons */}
       {!done && (
-        <div className="px-6 pb-4 flex items-center justify-center gap-5">
+        <div className="px-6 pb-5 flex items-center justify-center gap-4">
           <button
             onClick={() => handleAction("pass")}
-            className="w-14 h-14 rounded-full bg-white border border-gray-200 flex items-center justify-center text-2xl shadow-md active:scale-95 transition-transform"
+            className="w-13 h-13 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+            style={{ width: 52, height: 52 }}
           >
-            ✕
+            <span className="text-gray-400 text-lg font-light">✕</span>
           </button>
           <button
             onClick={() => onViewProfile(current)}
-            className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center text-xl shadow-sm active:scale-95 transition-transform"
+            className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm active:scale-95 transition-transform text-sm text-gray-400"
           >
-            ℹ️
+            ↑
           </button>
           <button
             onClick={() => handleAction("like")}
-            className="w-16 h-16 rounded-full gradient-bg flex items-center justify-center text-2xl shadow-lg shadow-rose-200 active:scale-95 transition-transform"
+            className="flex items-center justify-center bg-[#C2185B] text-white shadow-md active:scale-95 transition-transform rounded-full"
+            style={{ width: 64, height: 64 }}
           >
-            💝
+            <HeartIcon />
           </button>
           <button
             onClick={() => handleAction("like")}
-            className="w-12 h-12 rounded-full bg-amber-400 flex items-center justify-center text-xl shadow-md active:scale-95 transition-transform"
+            className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm active:scale-95 transition-transform text-base"
           >
-            ⭐
+            ★
           </button>
         </div>
       )}
@@ -131,37 +128,52 @@ export default function DiscoverScreen({
   );
 }
 
+function HeartIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+    </svg>
+  );
+}
+
 function CardContent({ profile, onTap, mini }: { profile: Profile; onTap?: () => void; mini?: boolean }) {
   return (
-    <div className="flex flex-col h-full" onClick={onTap} style={{ cursor: onTap ? "pointer" : "default" }}>
-      {/* Photo area */}
-      <div className={`relative flex items-center justify-center bg-gradient-to-br ${profile.gradient}`}
-        style={{ height: mini ? 140 : 240 }}>
-        <span className="text-7xl">{profile.emoji}</span>
-        <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
-          <span className="text-white text-xs font-bold">{profile.matchScore}%</span>
-          <span className="text-white text-xs">일치</span>
-        </div>
-        {profile.verified && (
-          <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
-            <span className="text-white text-xs">✓ 인증됨</span>
+    <div
+      className="flex flex-col h-full"
+      onClick={onTap}
+      style={{ cursor: onTap ? "pointer" : "default" }}
+    >
+      {/* Photo */}
+      <div
+        className={`relative flex items-center justify-center bg-gradient-to-b ${profile.gradient}`}
+        style={{ height: mini ? 120 : 220 }}
+      >
+        <span className="text-6xl select-none">{profile.emoji}</span>
+        {profile.verified && !mini && (
+          <div className="absolute top-3 left-3 bg-white/80 backdrop-blur-sm text-gray-600 text-[11px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="text-[#C2185B]">✓</span> 인증
+          </div>
+        )}
+        {!mini && (
+          <div className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm text-[11px] font-semibold text-gray-700 px-2 py-0.5 rounded-full">
+            {profile.matchScore}% 일치
           </div>
         )}
       </div>
 
       {/* Info */}
-      <div className="flex-1 p-4">
-        <div className="flex items-start justify-between mb-1">
-          <div>
-            <span className="font-black text-gray-900 text-xl">{profile.name}</span>
-            <span className="text-gray-500 text-base ml-1.5">{profile.age}세</span>
+      <div className="flex-1 px-4 py-3.5">
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-1.5">
+            <span className="font-bold text-gray-900 text-lg">{profile.name}</span>
+            <span className="text-gray-400 text-sm">{profile.age}</span>
           </div>
-          <span className="text-xs bg-rose-50 text-rose-600 font-semibold px-2 py-0.5 rounded-full border border-rose-100">
+          <span className="text-[11px] text-[#C2185B] font-medium border border-[#C2185B]/30 px-2 py-0.5 rounded-full bg-[#C2185B]/5">
             {profile.intent}
           </span>
         </div>
-        <p className="text-gray-400 text-xs mb-2">📍 {profile.location} · {profile.job}</p>
-        <p className="text-gray-400 text-xs mb-3">👶 {profile.kids}</p>
+        <p className="text-gray-400 text-xs mb-1">{profile.location} · {profile.job}</p>
+        <p className="text-gray-400 text-xs mb-3">자녀 {profile.kids}</p>
         {!mini && (
           <>
             <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-3">{profile.bio}</p>

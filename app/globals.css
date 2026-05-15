@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
 
 * {
   box-sizing: border-box;
@@ -16,18 +16,28 @@ html, body {
   overscroll-behavior: none;
   font-family: 'Noto Sans KR', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  color: #111111;
 }
 
 @layer utilities {
-  .gradient-text {
-    background: linear-gradient(135deg, #e11d48 0%, #f59e0b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .app-primary {
+    background-color: #C2185B;
+  }
+
+  .app-primary-text {
+    color: #C2185B;
+  }
+
+  .app-primary-soft {
+    background-color: #FFF0F5;
   }
 
   .gradient-bg {
-    background: linear-gradient(135deg, #e11d48 0%, #f59e0b 100%);
+    background-color: #C2185B;
+  }
+
+  .gradient-text {
+    color: #C2185B;
   }
 
   .flex-2 {

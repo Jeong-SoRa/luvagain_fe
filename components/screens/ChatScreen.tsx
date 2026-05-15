@@ -1,8 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import type { Profile } from "@/components/data/profiles";
+import type { Profile, ChatMessage } from "@/components/data/profiles";
 import { conversations } from "@/components/data/profiles";
-import type { ChatMessage } from "@/components/data/profiles";
 
 export default function ChatScreen({
   profile,
@@ -11,10 +10,10 @@ export default function ChatScreen({
   profile: Profile;
   onBack: () => void;
 }) {
-  const initMsgs: ChatMessage[] = conversations[profile.id] ?? [
+  const init: ChatMessage[] = conversations[profile.id] ?? [
     { id: 1, from: "them", text: "안녕하세요! 프로필 잘 봤어요 😊", time: "방금" },
   ];
-  const [messages, setMessages] = useState<ChatMessage[]>(initMsgs);
+  const [messages, setMessages] = useState<ChatMessage[]>(init);
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -25,67 +24,58 @@ export default function ChatScreen({
   function send() {
     const text = input.trim();
     if (!text) return;
-    const newMsg: ChatMessage = { id: Date.now(), from: "me", text, time: "방금" };
-    setMessages((prev) => [...prev, newMsg]);
+    setMessages((prev) => [...prev, { id: Date.now(), from: "me", text, time: "방금" }]);
     setInput("");
 
-    // Auto reply after delay
     setTimeout(() => {
       const replies = [
         "네, 저도 그렇게 생각해요 😊",
         "정말요? 저도 비슷한 경험이 있어요",
-        "하하, 맞아요! 공감돼요 ☺️",
-        "그렇군요. 더 이야기해요!",
+        "공감돼요. 더 이야기해요!",
+        "하하 맞아요 ☺️",
       ];
-      const reply: ChatMessage = {
-        id: Date.now() + 1,
-        from: "them",
-        text: replies[Math.floor(Math.random() * replies.length)],
-        time: "방금",
-      };
-      setMessages((prev) => [...prev, reply]);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, from: "them", text: replies[Math.floor(Math.random() * replies.length)], time: "방금" },
+      ]);
     }, 1200);
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-[#F8F7F6]">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-4 pt-10 pb-3 flex items-center gap-3">
         <button
           onClick={onBack}
-          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 text-lg active:bg-gray-100"
+          className="w-8 h-8 flex items-center justify-center text-gray-500 active:bg-gray-100 rounded-full"
         >
-          ←
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 5l-7 7 7 7" />
+          </svg>
         </button>
-        <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${profile.gradient} flex items-center justify-center text-lg`}>
+        <div className={`w-9 h-9 rounded-full bg-gradient-to-b ${profile.gradient} flex items-center justify-center text-lg`}>
           {profile.emoji}
         </div>
         <div className="flex-1">
-          <p className="font-bold text-gray-900 text-sm">{profile.name}</p>
-          <p className="text-xs text-green-500 font-medium">활동 중</p>
+          <p className="font-semibold text-gray-900 text-sm">{profile.name}</p>
+          <p className="text-[11px] text-green-500">활동 중</p>
         </div>
-        <button className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 active:bg-gray-100">
-          ⋯
-        </button>
       </div>
 
-      {/* Date pill */}
+      {/* Date label */}
       <div className="flex justify-center py-3">
-        <span className="text-xs bg-gray-200 text-gray-500 px-3 py-1 rounded-full">오늘</span>
+        <span className="text-[11px] bg-gray-200/70 text-gray-500 px-3 py-1 rounded-full">오늘</span>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 pb-2 flex flex-col gap-2">
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex flex-col gap-0.5 ${msg.from === "me" ? "items-end" : "items-start"}`}
-          >
+          <div key={msg.id} className={`flex flex-col gap-0.5 ${msg.from === "me" ? "items-end" : "items-start"}`}>
             <div
-              className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+              className={`max-w-[75%] px-4 py-2.5 text-sm leading-relaxed ${
                 msg.from === "me"
-                  ? "gradient-bg text-white rounded-br-sm"
-                  : "bg-white text-gray-800 border border-gray-100 rounded-bl-sm shadow-sm"
+                  ? "bg-[#C2185B] text-white rounded-2xl rounded-br-sm"
+                  : "bg-white text-gray-800 border border-gray-100 rounded-2xl rounded-bl-sm shadow-sm"
               }`}
             >
               {msg.text}
@@ -98,7 +88,6 @@ export default function ChatScreen({
 
       {/* Input */}
       <div className="bg-white border-t border-gray-100 px-3 py-3 flex items-center gap-2">
-        <button className="w-8 h-8 flex items-center justify-center text-gray-400 text-lg">+</button>
         <input
           type="text"
           value={input}
@@ -110,11 +99,13 @@ export default function ChatScreen({
         <button
           onClick={send}
           disabled={!input.trim()}
-          className={`w-9 h-9 rounded-full flex items-center justify-center text-base transition-all ${
-            input.trim() ? "gradient-bg text-white shadow-md" : "bg-gray-100 text-gray-300"
+          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+            input.trim() ? "bg-[#C2185B] text-white shadow-sm" : "bg-gray-100 text-gray-300"
           }`}
         >
-          ↑
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
         </button>
       </div>
     </div>
