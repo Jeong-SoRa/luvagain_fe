@@ -22,17 +22,15 @@ npm run dev
 - **Language**: TypeScript
 - **Deployment**: Vercel (GitHub Actions 자동 배포)
 
-## Vercel 배포 설정
+## Vercel 배포 설정 (네이티브 GitHub 연동)
 
-GitHub Repository Secrets에 다음을 추가하세요:
+1. [vercel.com](https://vercel.com) → **New Project**
+2. GitHub 계정 연결 후 `Jeong-SoRa/luvagain_fe` 레포 선택
+3. **Import** → Framework: Next.js 자동 감지 → **Deploy**
+4. 이후 `prototype` 및 `main` 브랜치 push 시 자동 배포됨
 
-| Secret | 설명 |
-|--------|------|
-| `VERCEL_TOKEN` | Vercel 계정 토큰 |
-| `VERCEL_ORG_ID` | Vercel 조직 ID |
-| `VERCEL_PROJECT_ID` | Vercel 프로젝트 ID |
-
-> `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`는 `vercel link` 실행 후 `.vercel/project.json`에서 확인할 수 있습니다.
+> - `prototype` 브랜치 → **Preview URL** (팀 공유용)
+> - `main` 브랜치 → **Production URL**
 
 ## 페이지 구성
 
