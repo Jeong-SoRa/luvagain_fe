@@ -4,7 +4,7 @@ import type { Profile, ChatMessage } from "@/components/data/profiles";
 import { conversations } from "@/components/data/profiles";
 import { useTheme } from "@/components/ThemeContext";
 
-// Mock: chat opened 2 days ago — D-1 remaining for prototype visibility
+// Prototype: starts at D-1 so Save/Throw flow is immediately visible
 const MOCK_DAYS_LEFT = 1;
 
 function SaveThrowModal({
@@ -43,7 +43,7 @@ function SaveThrowModal({
             className="w-full py-4 rounded-xl text-white font-bold text-base"
             style={{ backgroundColor: theme.primary }}
           >
-            Save — 계속 이야기하기
+            Save — 3일 연장하기
           </button>
           <button
             onClick={onThrow}
@@ -75,7 +75,7 @@ export default function ChatScreen({
   const [messages, setMessages] = useState<ChatMessage[]>(init);
   const [input, setInput] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [saved, setSaved] = useState(isSaved ?? false);
+  const [daysLeft, setDaysLeft] = useState(isSaved ? 3 : MOCK_DAYS_LEFT);
   const [thrown, setThrown] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -136,36 +136,27 @@ export default function ChatScreen({
           <p className="text-[11px] text-green-500">활동 중</p>
         </div>
         {/* D-day badge */}
-        {!saved && (
-          <div
-            className="px-2.5 py-1 rounded-full text-xs font-bold text-white"
-            style={{ backgroundColor: MOCK_DAYS_LEFT <= 1 ? "#EF4444" : theme.primary }}
-          >
-            D-{MOCK_DAYS_LEFT}
-          </div>
-        )}
-        {saved && (
-          <div className="px-2.5 py-1 rounded-full text-xs font-semibold border" style={{ color: theme.primary, borderColor: `${theme.primary}40` }}>
-            저장됨
-          </div>
-        )}
+        <div
+          className="px-2.5 py-1 rounded-full text-xs font-bold text-white"
+          style={{ backgroundColor: daysLeft <= 1 ? "#EF4444" : theme.primary }}
+        >
+          D-{daysLeft}
+        </div>
       </div>
 
-      {/* 3-day expiry banner (shown when not saved) */}
-      {!saved && (
-        <button
-          onClick={() => setShowModal(true)}
-          className="w-full flex items-center justify-between px-4 py-2.5 text-sm border-b"
-          style={{ backgroundColor: MOCK_DAYS_LEFT <= 1 ? "#FFF1F1" : theme.primarySoft, borderColor: "#F3F4F6" }}
-        >
-          <span style={{ color: MOCK_DAYS_LEFT <= 1 ? "#EF4444" : theme.primary }} className="font-medium text-xs">
-            {MOCK_DAYS_LEFT <= 1
-              ? `⏰ 채팅 기간이 ${MOCK_DAYS_LEFT}일 남았어요. 지금 선택하세요!`
-              : `💬 채팅 가능 기간 D-${MOCK_DAYS_LEFT} · 3일 후 Save 또는 Throw`}
-          </span>
-          <span className="text-xs text-gray-400">선택하기 →</span>
-        </button>
-      )}
+      {/* 3-day expiry banner */}
+      <button
+        onClick={() => setShowModal(true)}
+        className="w-full flex items-center justify-between px-4 py-2.5 text-sm border-b"
+        style={{ backgroundColor: daysLeft <= 1 ? "#FFF1F1" : theme.primarySoft, borderColor: "#F3F4F6" }}
+      >
+        <span style={{ color: daysLeft <= 1 ? "#EF4444" : theme.primary }} className="font-medium text-xs">
+          {daysLeft <= 1
+            ? `⏰ 채팅 기간이 ${daysLeft}일 남았어요. 지금 선택하세요!`
+            : `💬 채팅 가능 기간 D-${daysLeft} · Save하면 +3일 연장`}
+        </span>
+        <span className="text-xs text-gray-400">선택하기 →</span>
+      </button>
 
       {/* Date label */}
       <div className="flex justify-center py-3">
@@ -219,7 +210,7 @@ export default function ChatScreen({
         <SaveThrowModal
           profile={profile}
           theme={theme}
-          onSave={() => { setSaved(true); setShowModal(false); }}
+          onSave={() => { setDaysLeft((d) => d + 3); setShowModal(false); }}
           onThrow={() => { setThrown(true); setShowModal(false); onThrow(profile.id); }}
         />
       )}
