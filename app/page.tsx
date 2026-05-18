@@ -22,6 +22,11 @@ function AppContent() {
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [matchedProfile, setMatchedProfile] = useState<Profile | null>(null);
 
+  // 보류된 프로필 목록
+  const [heldProfiles, setHeldProfiles] = useState<Profile[]>([]);
+  // Throw된 채팅 ID (해당 ID는 채팅 입장 시 throw 상태로 보여줌)
+  const [thrownIds, setThrownIds] = useState<number[]>([]);
+
   function goToChat(p: Profile) {
     setSelectedProfile(p);
     setSubScreen("chat");
@@ -32,6 +37,23 @@ function AppContent() {
     setSubScreen(null);
     setSelectedProfile(null);
     setMatchedProfile(p);
+  }
+
+  function handleHold(p: Profile) {
+    setHeldProfiles((prev) => prev.find((h) => h.id === p.id) ? prev : [...prev, p]);
+  }
+
+  function handleLikeHeld(p: Profile) {
+    setHeldProfiles((prev) => prev.filter((h) => h.id !== p.id));
+    setMatchedProfile(p);
+  }
+
+  function handlePassHeld(p: Profile) {
+    setHeldProfiles((prev) => prev.filter((h) => h.id !== p.id));
+  }
+
+  function handleThrow(id: number) {
+    setThrownIds((prev) => [...prev, id]);
   }
 
   function handleMainNav(s: MainScreen) {
@@ -64,14 +86,23 @@ function AppContent() {
           <ChatScreen
             profile={selectedProfile}
             onBack={() => { setSubScreen(null); setSelectedProfile(null); }}
+            onThrow={handleThrow}
+            isSaved={false}
           />
         ) : mainScreen === "discover" ? (
           <DiscoverScreen
             onViewProfile={(p) => { setSelectedProfile(p); setSubScreen("profile-detail"); }}
             onMatch={setMatchedProfile}
+            onHold={handleHold}
+            heldCount={heldProfiles.length}
           />
         ) : mainScreen === "inbox" ? (
-          <InboxScreen onOpenChat={goToChat} />
+          <InboxScreen
+            onOpenChat={goToChat}
+            heldProfiles={heldProfiles}
+            onLikeHeld={handleLikeHeld}
+            onPassHeld={handlePassHeld}
+          />
         ) : (
           <MyProfileScreen />
         )}
@@ -86,10 +117,13 @@ function AppContent() {
       </div>
 
       {subScreen === null && (
-        <BottomNav current={mainScreen} onChange={handleMainNav} unread={1} />
+        <BottomNav
+          current={mainScreen}
+          onChange={handleMainNav}
+          unread={1}
+        />
       )}
 
-      {/* Theme switcher — prototype only */}
       <ThemeSelector />
     </div>
   );

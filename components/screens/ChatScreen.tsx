@@ -4,13 +4,79 @@ import type { Profile, ChatMessage } from "@/components/data/profiles";
 import { conversations } from "@/components/data/profiles";
 import { useTheme } from "@/components/ThemeContext";
 
-export default function ChatScreen({ profile, onBack }: { profile: Profile; onBack: () => void }) {
+// Mock: chat opened 2 days ago — D-1 remaining for prototype visibility
+const MOCK_DAYS_LEFT = 1;
+
+function SaveThrowModal({
+  profile,
+  onSave,
+  onThrow,
+  theme,
+}: {
+  profile: Profile;
+  onSave: () => void;
+  onThrow: () => void;
+  theme: ReturnType<typeof useTheme>["theme"];
+}) {
+  return (
+    <div className="absolute inset-0 z-50 flex items-end bg-black/50 backdrop-blur-sm">
+      <div className="w-full bg-white rounded-t-3xl px-5 pt-6 pb-10">
+        <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+
+        <div className="flex justify-center mb-4">
+          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-100">
+            <img src={profile.photo} alt={profile.name} className="w-full h-full object-cover" />
+          </div>
+        </div>
+
+        <h3 className="text-center font-bold text-gray-900 text-lg mb-1">
+          {profile.name}님과의 3일이 지났어요
+        </h3>
+        <p className="text-center text-gray-400 text-sm mb-6 leading-relaxed">
+          지금 선택해주세요.<br />
+          <span className="text-red-500 font-medium">Throw를 선택하면 이 채팅방을 다시 찾을 수 없어요.</span>
+        </p>
+
+        <div className="flex flex-col gap-2.5">
+          <button
+            onClick={onSave}
+            className="w-full py-4 rounded-xl text-white font-bold text-base"
+            style={{ backgroundColor: theme.primary }}
+          >
+            Save — 계속 이야기하기
+          </button>
+          <button
+            onClick={onThrow}
+            className="w-full py-4 rounded-xl bg-gray-100 text-gray-500 font-semibold text-sm"
+          >
+            Throw — 채팅방 삭제
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function ChatScreen({
+  profile,
+  onBack,
+  onThrow,
+  isSaved,
+}: {
+  profile: Profile;
+  onBack: () => void;
+  onThrow: (id: number) => void;
+  isSaved?: boolean;
+}) {
   const { theme } = useTheme();
   const init: ChatMessage[] = conversations[profile.id] ?? [
     { id: 1, from: "them", text: "안녕하세요! 프로필 잘 봤어요 😊", time: "방금" },
   ];
   const [messages, setMessages] = useState<ChatMessage[]>(init);
   const [input, setInput] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [saved, setSaved] = useState(isSaved ?? false);
+  const [thrown, setThrown] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,6 +97,28 @@ export default function ChatScreen({ profile, onBack }: { profile: Profile; onBa
     }, 1200);
   }
 
+  if (thrown) {
+    return (
+      <div className="flex flex-col h-full bg-white items-center justify-center px-8 text-center gap-4">
+        <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2">
+            <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
+          </svg>
+        </div>
+        <div>
+          <p className="font-semibold text-gray-700 text-base">채팅방이 삭제됐어요</p>
+          <p className="text-gray-400 text-sm mt-1 leading-relaxed">
+            {profile.name}님은 이제 볼 수 없어요.<br />
+            다음 추천에서 우연히 다시 만날 수도 있어요.
+          </p>
+        </div>
+        <button onClick={onBack} className="mt-2 px-6 py-2.5 rounded-xl bg-gray-100 text-gray-600 text-sm font-medium">
+          돌아가기
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full bg-[#F8F7F6]">
       {/* Header */}
@@ -47,8 +135,39 @@ export default function ChatScreen({ profile, onBack }: { profile: Profile; onBa
           <p className="font-semibold text-gray-900 text-sm">{profile.name}</p>
           <p className="text-[11px] text-green-500">활동 중</p>
         </div>
+        {/* D-day badge */}
+        {!saved && (
+          <div
+            className="px-2.5 py-1 rounded-full text-xs font-bold text-white"
+            style={{ backgroundColor: MOCK_DAYS_LEFT <= 1 ? "#EF4444" : theme.primary }}
+          >
+            D-{MOCK_DAYS_LEFT}
+          </div>
+        )}
+        {saved && (
+          <div className="px-2.5 py-1 rounded-full text-xs font-semibold border" style={{ color: theme.primary, borderColor: `${theme.primary}40` }}>
+            저장됨
+          </div>
+        )}
       </div>
 
+      {/* 3-day expiry banner (shown when not saved) */}
+      {!saved && (
+        <button
+          onClick={() => setShowModal(true)}
+          className="w-full flex items-center justify-between px-4 py-2.5 text-sm border-b"
+          style={{ backgroundColor: MOCK_DAYS_LEFT <= 1 ? "#FFF1F1" : theme.primarySoft, borderColor: "#F3F4F6" }}
+        >
+          <span style={{ color: MOCK_DAYS_LEFT <= 1 ? "#EF4444" : theme.primary }} className="font-medium text-xs">
+            {MOCK_DAYS_LEFT <= 1
+              ? `⏰ 채팅 기간이 ${MOCK_DAYS_LEFT}일 남았어요. 지금 선택하세요!`
+              : `💬 채팅 가능 기간 D-${MOCK_DAYS_LEFT} · 3일 후 Save 또는 Throw`}
+          </span>
+          <span className="text-xs text-gray-400">선택하기 →</span>
+        </button>
+      )}
+
+      {/* Date label */}
       <div className="flex justify-center py-3">
         <span className="text-[11px] bg-gray-200/70 text-gray-500 px-3 py-1 rounded-full">오늘</span>
       </div>
@@ -94,6 +213,16 @@ export default function ChatScreen({ profile, onBack }: { profile: Profile; onBa
           </svg>
         </button>
       </div>
+
+      {/* Save/Throw modal */}
+      {showModal && (
+        <SaveThrowModal
+          profile={profile}
+          theme={theme}
+          onSave={() => { setSaved(true); setShowModal(false); }}
+          onThrow={() => { setThrown(true); setShowModal(false); onThrow(profile.id); }}
+        />
+      )}
     </div>
   );
 }
