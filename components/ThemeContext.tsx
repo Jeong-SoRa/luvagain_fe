@@ -55,12 +55,13 @@ export const themes: Theme[] = [
 const ThemeContext = createContext<{
   theme: Theme;
   setTheme: (id: ThemeId) => void;
-}>({ theme: themes[0], setTheme: () => {} });
+  appName: string;
+}>({ theme: themes[0], setTheme: () => {}, appName: "LoveAgain" });
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export function ThemeProvider({ children, appName = "LoveAgain" }: { children: React.ReactNode; appName?: string }) {
   const [id, setId] = useState<ThemeId>("rose");
   return (
-    <ThemeContext.Provider value={{ theme: themes.find((t) => t.id === id)!, setTheme: setId }}>
+    <ThemeContext.Provider value={{ theme: themes.find((t) => t.id === id)!, setTheme: setId, appName }}>
       {children}
     </ThemeContext.Provider>
   );

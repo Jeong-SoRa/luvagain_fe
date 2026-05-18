@@ -74,7 +74,7 @@ const FEATURES = [
 ];
 
 export default function ThemeSelector() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, appName } = useTheme();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"features" | "theme">("features");
 
@@ -110,7 +110,7 @@ export default function ThemeSelector() {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h3 className="font-bold text-gray-900 text-base">프로토타입 가이드</h3>
-                  <p className="text-xs text-gray-400 mt-0.5">LoveAgain · 팀원 공유용</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{appName} · 팀원 공유용</p>
                 </div>
                 <span
                   className="text-[11px] font-bold px-2.5 py-1 rounded-full text-white"

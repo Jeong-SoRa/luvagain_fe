@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "@/components/ThemeContext";
 
 export default function SplashScreen({ onDone }: { onDone: () => void }) {
-  const { theme } = useTheme();
+  const { theme, appName } = useTheme();
   const [phase, setPhase] = useState<"in" | "hold" | "out">("in");
 
   useEffect(() => {
@@ -31,8 +31,10 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
           </svg>
         </div>
         <div className="text-center">
-          <h1 className="text-white text-3xl font-bold tracking-tight">LoveAgain</h1>
-          <p className="text-white/40 text-sm mt-1.5 font-light tracking-widest">다시, 사랑</p>
+          <h1 className="text-white text-3xl font-bold tracking-tight">{appName}</h1>
+          <p className="text-white/40 text-sm mt-1.5 font-light tracking-widest">
+            {appName === "다시, 3일" ? "3일의 설렘, 그리고 선택" : "다시, 사랑"}
+          </p>
         </div>
       </div>
 

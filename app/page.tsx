@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { ThemeProvider } from "@/components/ThemeContext";
 import SplashScreen from "@/components/screens/SplashScreen";
 import BottomNav from "@/components/BottomNav";
@@ -15,7 +16,7 @@ import type { Profile } from "@/components/data/profiles";
 type MainScreen = "discover" | "inbox" | "myprofile";
 type SubScreen = "profile-detail" | "chat" | null;
 
-function AppContent() {
+function AppInner() {
   const [splashDone, setSplashDone] = useState(false);
   const [mainScreen, setMainScreen] = useState<MainScreen>("discover");
   const [subScreen, setSubScreen] = useState<SubScreen>(null);
@@ -129,12 +130,22 @@ function AppContent() {
   );
 }
 
+function AppContent() {
+  const searchParams = useSearchParams();
+  const appName = searchParams.get("v") === "3days" ? "다시, 3일" : "LoveAgain";
+  return (
+    <ThemeProvider appName={appName}>
+      <AppInner />
+    </ThemeProvider>
+  );
+}
+
 export default function App() {
   return (
     <div className="min-h-screen bg-[#EBEBEB] flex items-center justify-center">
-      <ThemeProvider>
+      <Suspense>
         <AppContent />
-      </ThemeProvider>
+      </Suspense>
     </div>
   );
 }
