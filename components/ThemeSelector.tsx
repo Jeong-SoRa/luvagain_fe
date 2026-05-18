@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { themes, useTheme, type ThemeId } from "./ThemeContext";
+import { useTheme } from "./ThemeContext";
 
 const FEATURES = [
   {
@@ -74,9 +74,8 @@ const FEATURES = [
 ];
 
 export default function ThemeSelector() {
-  const { theme, setTheme, appName } = useTheme();
+  const { theme } = useTheme();
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<"features" | "theme">("features");
 
   return (
     <>
@@ -85,11 +84,7 @@ export default function ThemeSelector() {
         onClick={() => setOpen(true)}
         title="프로토타입 가이드"
         className="absolute z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full shadow-lg border border-white/20 text-white text-xs font-semibold"
-        style={{
-          bottom: 72 + 12,
-          right: 12,
-          backgroundColor: theme.primary,
-        }}
+        style={{ bottom: 72 + 12, right: 12, backgroundColor: theme.primary }}
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
           <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
@@ -105,12 +100,12 @@ export default function ThemeSelector() {
 
           <div className="relative bg-white rounded-t-3xl z-10 flex flex-col" style={{ maxHeight: "82%" }}>
             {/* Header */}
-            <div className="px-5 pt-4 pb-0 shrink-0">
+            <div className="px-5 pt-4 pb-4 shrink-0">
               <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-bold text-gray-900 text-base">프로토타입 가이드</h3>
-                  <p className="text-xs text-gray-400 mt-0.5">{appName} · 팀원 공유용</p>
+                  <p className="text-xs text-gray-400 mt-0.5">다시, 3일 · 팀원 공유용</p>
                 </div>
                 <span
                   className="text-[11px] font-bold px-2.5 py-1 rounded-full text-white"
@@ -119,106 +114,52 @@ export default function ThemeSelector() {
                   PROTOTYPE
                 </span>
               </div>
-
-              {/* Tabs */}
-              <div className="flex gap-1 bg-gray-100 p-1 rounded-xl mb-4">
-                {(["features", "theme"] as const).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTab(t)}
-                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all"
-                    style={
-                      tab === t
-                        ? { backgroundColor: theme.primary, color: "white" }
-                        : { color: "#6B7280" }
-                    }
-                  >
-                    {t === "features" ? "주요 기능" : "테마"}
-                  </button>
-                ))}
-              </div>
             </div>
 
             {/* Scrollable content */}
             <div className="flex-1 overflow-y-auto px-5 pb-8">
-              {tab === "features" ? (
-                <div className="flex flex-col gap-3">
-                  {FEATURES.map((f, i) => (
-                    <div key={i} className="rounded-2xl border border-gray-100 overflow-hidden">
-                      {/* Feature header */}
-                      <div
-                        className="flex items-center gap-3 px-4 py-3"
-                        style={{ backgroundColor: theme.primarySoft }}
-                      >
-                        <span style={{ color: theme.primary }}>{f.icon}</span>
-                        <div className="flex-1">
-                          <p className="font-semibold text-gray-900 text-sm">{f.title}</p>
-                          <p className="text-gray-500 text-xs leading-snug mt-0.5">{f.desc}</p>
-                        </div>
-                      </div>
-                      {/* Actions */}
-                      <div className="px-4 py-2.5 flex flex-col gap-1.5 bg-white">
-                        {f.actions.map((a, j) => (
-                          <div key={j} className="flex items-center gap-2">
-                            <span
-                              className="text-[11px] font-bold px-2 py-0.5 rounded-md shrink-0"
-                              style={{ backgroundColor: theme.primaryMid, color: theme.primary }}
-                            >
-                              {a.label}
-                            </span>
-                            <span className="text-xs text-gray-400">{a.note}</span>
-                          </div>
-                        ))}
+              <div className="flex flex-col gap-3">
+                {FEATURES.map((f, i) => (
+                  <div key={i} className="rounded-2xl border border-gray-100 overflow-hidden">
+                    <div className="flex items-center gap-3 px-4 py-3" style={{ backgroundColor: theme.primarySoft }}>
+                      <span style={{ color: theme.primary }}>{f.icon}</span>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900 text-sm">{f.title}</p>
+                        <p className="text-gray-500 text-xs leading-snug mt-0.5">{f.desc}</p>
                       </div>
                     </div>
-                  ))}
-
-                  {/* Flow summary */}
-                  <div className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-4 mt-1">
-                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-3">전체 플로우</p>
-                    <div className="flex items-center gap-1 flex-wrap text-xs text-gray-600">
-                      {[
-                        "탐색 카드", "→", "좋아요", "→", "매칭 팝업", "→",
-                        "채팅 (D-3)", "→", "D-0", "→", "Save / Throw",
-                      ].map((step, i) => (
-                        <span
-                          key={i}
-                          className={step === "→" ? "text-gray-300" : "font-medium px-2 py-0.5 rounded-md"}
-                          style={step !== "→" ? { backgroundColor: theme.primarySoft, color: theme.primary } : {}}
-                        >
-                          {step}
-                        </span>
+                    <div className="px-4 py-2.5 flex flex-col gap-1.5 bg-white">
+                      {f.actions.map((a, j) => (
+                        <div key={j} className="flex items-center gap-2">
+                          <span
+                            className="text-[11px] font-bold px-2 py-0.5 rounded-md shrink-0"
+                            style={{ backgroundColor: theme.primaryMid, color: theme.primary }}
+                          >
+                            {a.label}
+                          </span>
+                          <span className="text-xs text-gray-400">{a.note}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-xs text-gray-400 mb-4">앱 전체 색상 테마를 변경합니다</p>
-                  <div className="grid grid-cols-4 gap-3">
-                    {themes.map((t) => {
-                      const active = t.id === theme.id;
-                      return (
-                        <button
-                          key={t.id}
-                          onClick={() => setTheme(t.id as ThemeId)}
-                          className="flex flex-col items-center gap-2 py-3 rounded-2xl border-2 transition-all"
-                          style={{
-                            borderColor: active ? theme.primary : "transparent",
-                            backgroundColor: active ? theme.primarySoft : "#F9FAFB",
-                          }}
-                        >
-                          <div className="w-10 h-10 rounded-full shadow-sm" style={{ backgroundColor: t.swatch }} />
-                          <span className="text-xs font-medium text-gray-600">{t.label}</span>
-                          {active && (
-                            <span className="text-[10px] font-bold" style={{ color: theme.primary }}>적용 중</span>
-                          )}
-                        </button>
-                      );
-                    })}
+                ))}
+
+                {/* Flow summary */}
+                <div className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-4 mt-1">
+                  <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-3">전체 플로우</p>
+                  <div className="flex items-center gap-1 flex-wrap text-xs text-gray-600">
+                    {["탐색 카드", "→", "좋아요", "→", "매칭 팝업", "→", "채팅 (D-3)", "→", "D-0", "→", "Save / Throw"].map((step, i) => (
+                      <span
+                        key={i}
+                        className={step === "→" ? "text-gray-300" : "font-medium px-2 py-0.5 rounded-md"}
+                        style={step !== "→" ? { backgroundColor: theme.primarySoft, color: theme.primary } : {}}
+                      >
+                        {step}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
