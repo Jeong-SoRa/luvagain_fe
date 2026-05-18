@@ -2,14 +2,10 @@
 import { useState, useRef, useEffect } from "react";
 import type { Profile, ChatMessage } from "@/components/data/profiles";
 import { conversations } from "@/components/data/profiles";
+import { useTheme } from "@/components/ThemeContext";
 
-export default function ChatScreen({
-  profile,
-  onBack,
-}: {
-  profile: Profile;
-  onBack: () => void;
-}) {
+export default function ChatScreen({ profile, onBack }: { profile: Profile; onBack: () => void }) {
+  const { theme } = useTheme();
   const init: ChatMessage[] = conversations[profile.id] ?? [
     { id: 1, from: "them", text: "안녕하세요! 프로필 잘 봤어요 😊", time: "방금" },
   ];
@@ -26,14 +22,8 @@ export default function ChatScreen({
     if (!text) return;
     setMessages((prev) => [...prev, { id: Date.now(), from: "me", text, time: "방금" }]);
     setInput("");
-
     setTimeout(() => {
-      const replies = [
-        "네, 저도 그렇게 생각해요 😊",
-        "정말요? 저도 비슷한 경험이 있어요",
-        "공감돼요. 더 이야기해요!",
-        "하하 맞아요 ☺️",
-      ];
+      const replies = ["네, 저도 그렇게 생각해요 😊", "정말요? 저도 비슷한 경험이 있어요", "공감돼요!", "하하 맞아요 ☺️"];
       setMessages((prev) => [
         ...prev,
         { id: Date.now() + 1, from: "them", text: replies[Math.floor(Math.random() * replies.length)], time: "방금" },
@@ -45,16 +35,13 @@ export default function ChatScreen({
     <div className="flex flex-col h-full bg-[#F8F7F6]">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-4 pt-10 pb-3 flex items-center gap-3">
-        <button
-          onClick={onBack}
-          className="w-8 h-8 flex items-center justify-center text-gray-500 active:bg-gray-100 rounded-full"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <button onClick={onBack} className="w-8 h-8 flex items-center justify-center active:bg-gray-100 rounded-full">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2">
             <path d="M19 12H5M12 5l-7 7 7 7" />
           </svg>
         </button>
-        <div className={`w-9 h-9 rounded-full bg-gradient-to-b ${profile.gradient} flex items-center justify-center text-lg`}>
-          {profile.emoji}
+        <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 shrink-0">
+          <img src={profile.photo} alt={profile.name} className="w-full h-full object-cover" />
         </div>
         <div className="flex-1">
           <p className="font-semibold text-gray-900 text-sm">{profile.name}</p>
@@ -62,7 +49,6 @@ export default function ChatScreen({
         </div>
       </div>
 
-      {/* Date label */}
       <div className="flex justify-center py-3">
         <span className="text-[11px] bg-gray-200/70 text-gray-500 px-3 py-1 rounded-full">오늘</span>
       </div>
@@ -72,11 +58,12 @@ export default function ChatScreen({
         {messages.map((msg) => (
           <div key={msg.id} className={`flex flex-col gap-0.5 ${msg.from === "me" ? "items-end" : "items-start"}`}>
             <div
-              className={`max-w-[75%] px-4 py-2.5 text-sm leading-relaxed ${
+              className="max-w-[75%] px-4 py-2.5 text-sm leading-relaxed rounded-2xl"
+              style={
                 msg.from === "me"
-                  ? "bg-[#C2185B] text-white rounded-2xl rounded-br-sm"
-                  : "bg-white text-gray-800 border border-gray-100 rounded-2xl rounded-bl-sm shadow-sm"
-              }`}
+                  ? { backgroundColor: theme.primary, color: "white", borderBottomRightRadius: 4 }
+                  : { backgroundColor: "white", color: "#111827", borderBottomLeftRadius: 4, border: "1px solid #F3F4F6" }
+              }
             >
               {msg.text}
             </div>
@@ -99,11 +86,10 @@ export default function ChatScreen({
         <button
           onClick={send}
           disabled={!input.trim()}
-          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-            input.trim() ? "bg-[#C2185B] text-white shadow-sm" : "bg-gray-100 text-gray-300"
-          }`}
+          className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+          style={{ backgroundColor: input.trim() ? theme.primary : "#F3F4F6" }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill={input.trim() ? "white" : "#D1D5DB"}>
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
           </svg>
         </button>

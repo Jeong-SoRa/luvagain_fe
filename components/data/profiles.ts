@@ -8,6 +8,7 @@ export type Profile = {
   kidsDetail?: string;
   status: string;
   verified: boolean;
+  photo: string;
   emoji: string;
   gradient: string;
   bgColor: string;
@@ -44,6 +45,7 @@ export const profiles: Profile[] = [
     kids: "자녀 없음",
     status: "이혼 후 2년",
     verified: true,
+    photo: "https://randomuser.me/api/portraits/men/40.jpg",
     emoji: "👨‍💻",
     gradient: "from-stone-200 to-stone-300",
     bgColor: "bg-stone-50",
@@ -66,6 +68,7 @@ export const profiles: Profile[] = [
     kidsDetail: "아이는 전 배우자와 함께 살고 있어요",
     status: "이혼 후 3년",
     verified: true,
+    photo: "https://randomuser.me/api/portraits/men/55.jpg",
     emoji: "👨‍⚕️",
     gradient: "from-slate-200 to-slate-300",
     bgColor: "bg-slate-50",
@@ -87,6 +90,7 @@ export const profiles: Profile[] = [
     kids: "자녀 없음",
     status: "이혼 후 1년 6개월",
     verified: true,
+    photo: "https://randomuser.me/api/portraits/men/33.jpg",
     emoji: "🧑‍💼",
     gradient: "from-zinc-200 to-zinc-300",
     bgColor: "bg-zinc-50",
@@ -109,6 +113,7 @@ export const profiles: Profile[] = [
     kidsDetail: "아이와 함께 살고 있어요. 이해해주실 분만 연락주세요",
     status: "이혼 후 4년",
     verified: true,
+    photo: "https://randomuser.me/api/portraits/men/47.jpg",
     emoji: "👨‍🏫",
     gradient: "from-neutral-200 to-neutral-300",
     bgColor: "bg-neutral-50",
@@ -130,6 +135,7 @@ export const profiles: Profile[] = [
     kids: "자녀 없음",
     status: "사별 후 2년",
     verified: true,
+    photo: "https://randomuser.me/api/portraits/men/62.jpg",
     emoji: "🧔",
     gradient: "from-gray-200 to-gray-300",
     bgColor: "bg-gray-50",
@@ -151,6 +157,7 @@ export const myProfile = {
   job: "마케터",
   kids: "1명 (7세, 동거)",
   status: "이혼 후 2년 6개월",
+  photo: "https://randomuser.me/api/portraits/women/44.jpg",
   emoji: "👩",
   gradient: "from-rose-300 to-rose-400",
   bio: "7살 딸과 함께 살고 있어요. 서로의 상황을 이해하면서 천천히 알아가고 싶습니다. 함께 밥 한 끼 먹을 수 있는 분이면 좋겠어요.",
