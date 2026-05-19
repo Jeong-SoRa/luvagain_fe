@@ -54,7 +54,7 @@ export default function DiscoverScreen({
       {/* Header */}
       <div className="px-5 pt-10 pb-3 bg-white flex items-center justify-between border-b border-gray-100">
         <div>
-          <h1 className="text-lg font-bold text-gray-900">LoveAgain</h1>
+          <h1 className="text-lg font-bold text-gray-900">다시, 3일</h1>
           <p className="text-xs text-gray-400 mt-0.5">
             오늘의 추천 {profiles.length}명
             {heldCount > 0 && (
@@ -131,23 +131,6 @@ export default function DiscoverScreen({
             <span className="text-[10px] text-gray-400">패스</span>
           </button>
 
-          {/* Hold */}
-          <button
-            onClick={() => handleAction("hold")}
-            className="flex flex-col items-center gap-1 active:scale-95 transition-transform"
-          >
-            <div
-              className="w-14 h-14 rounded-full bg-white border flex items-center justify-center shadow-sm"
-              style={{ borderColor: `${theme.primary}50` }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2">
-                <path d="M10 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-4" />
-                <path d="M15 3h6v6" /><path d="M10 14 21 3" />
-              </svg>
-            </div>
-            <span className="text-[10px] font-medium" style={{ color: theme.primary }}>보류</span>
-          </button>
-
           {/* Like (heart — starts 3-day chat) */}
           <button
             onClick={() => handleAction("like")}
@@ -164,6 +147,22 @@ export default function DiscoverScreen({
             <span className="text-[10px] text-white font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: theme.primary }}>
               3일 채팅
             </span>
+          </button>
+
+          {/* Hold */}
+          <button
+            onClick={() => handleAction("hold")}
+            className="flex flex-col items-center gap-1 active:scale-95 transition-transform"
+          >
+            <div
+              className="w-14 h-14 rounded-full bg-white border flex items-center justify-center shadow-sm"
+              style={{ borderColor: `${theme.primary}50` }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <span className="text-[10px] font-medium" style={{ color: theme.primary }}>보류</span>
           </button>
         </div>
       )}
