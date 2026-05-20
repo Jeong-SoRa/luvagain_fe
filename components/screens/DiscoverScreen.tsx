@@ -159,7 +159,8 @@ export default function DiscoverScreen({
               style={{ borderColor: `${theme.primary}50` }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
               </svg>
             </div>
             <span className="text-[10px] font-medium" style={{ color: theme.primary }}>보류</span>
@@ -218,48 +219,54 @@ function CardContent({
   mini?: boolean;
 }) {
   return (
-    <div className="flex flex-col h-full" onClick={onTap} style={{ cursor: onTap ? "pointer" : "default" }}>
-      <div className="relative overflow-hidden bg-gray-100" style={{ height: mini ? 120 : 230 }}>
-        <img src={profile.photo} alt={profile.name} className="w-full h-full object-cover" />
-        {!mini && (
-          <>
-            {profile.verified && (
-              <div className="absolute top-3 left-3 bg-white/80 backdrop-blur-sm text-xs font-medium px-2 py-0.5 rounded-full" style={{ color: theme.primary }}>
+    <div
+      className="relative h-full w-full overflow-hidden"
+      onClick={onTap}
+      style={{ cursor: onTap ? "pointer" : "default" }}
+    >
+      {/* Full-bleed photo */}
+      <img src={profile.photo} alt={profile.name} className="absolute inset-0 w-full h-full object-cover" />
+
+      {!mini && (
+        <>
+          {/* Bottom gradient for readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+          {/* Top badges */}
+          <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+            {profile.verified ? (
+              <div className="bg-white/80 backdrop-blur-sm text-xs font-medium px-2 py-0.5 rounded-full" style={{ color: theme.primary }}>
                 ✓ 인증
               </div>
-            )}
-            <div className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm text-xs font-semibold px-2 py-0.5 rounded-full text-gray-700">
+            ) : <div />}
+            <div className="bg-white/80 backdrop-blur-sm text-xs font-semibold px-2 py-0.5 rounded-full text-gray-700">
               {profile.matchScore}% 일치
             </div>
-          </>
-        )}
-      </div>
-      <div className="flex-1 px-4 py-3.5">
-        <div className="flex items-center justify-between mb-1">
-          <div className="flex items-center gap-1.5">
-            <span className="font-bold text-gray-900 text-lg">{profile.name}</span>
-            <span className="text-gray-400 text-sm">{profile.age}</span>
           </div>
-          <span
-            className="text-[11px] font-medium border px-2 py-0.5 rounded-full"
-            style={{ color: theme.primary, borderColor: `${theme.primary}40`, backgroundColor: theme.primaryMid }}
-          >
-            {profile.intent}
-          </span>
-        </div>
-        <p className="text-gray-400 text-xs mb-1">{profile.location} · {profile.job}</p>
-        <p className="text-gray-400 text-xs mb-3">자녀 {profile.kids}</p>
-        {!mini && (
-          <>
-            <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-3">{profile.bio}</p>
+
+          {/* Profile info overlay at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-10">
+            <div className="flex items-end justify-between mb-1">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-bold text-white text-xl leading-tight">{profile.name}</span>
+                <span className="text-white/80 text-base">{profile.age}</span>
+              </div>
+              <span
+                className="text-[11px] font-medium px-2 py-0.5 rounded-full border border-white/40 bg-white/20 text-white"
+              >
+                {profile.intent}
+              </span>
+            </div>
+            <p className="text-white/70 text-xs mb-2">{profile.location} · {profile.job} · 자녀 {profile.kids}</p>
+            <p className="text-white/90 text-sm leading-relaxed line-clamp-2 mb-2.5">{profile.bio}</p>
             <div className="flex flex-wrap gap-1.5">
               {profile.tags.slice(0, 3).map((tag) => (
-                <span key={tag} className="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full">{tag}</span>
+                <span key={tag} className="text-xs px-2.5 py-0.5 rounded-full border border-white/40 bg-white/15 text-white/90">{tag}</span>
               ))}
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
