@@ -2,14 +2,17 @@
 import { useState } from "react";
 import { myProfile } from "@/components/data/profiles";
 import { themes, useTheme, type ThemeId } from "@/components/ThemeContext";
+import EditProfileScreen, { type EditableProfile } from "@/components/screens/EditProfileScreen";
 
-const profileSections = [
-  { icon: "📝", label: "자기소개", value: myProfile.bio },
-  { icon: "💍", label: "재혼 의향", value: myProfile.intent },
-  { icon: "👶", label: "자녀 현황", value: myProfile.kids },
-  { icon: "📍", label: "지역", value: myProfile.location },
-  { icon: "💼", label: "직업", value: myProfile.job },
-];
+function profileSections(p: EditableProfile) {
+  return [
+    { icon: "📝", label: "자기소개", value: p.bio },
+    { icon: "💍", label: "재혼 의향", value: p.intent },
+    { icon: "👶", label: "자녀 현황", value: p.kids },
+    { icon: "📍", label: "지역", value: p.location },
+    { icon: "💼", label: "직업", value: p.job },
+  ];
+}
 
 const ALARM_ITEMS = [
   { id: "match" as const, label: "매칭 알림", desc: "새로운 매칭이 성사되면 알려드려요" },
@@ -37,6 +40,17 @@ function Toggle({ on, onChange, color }: { on: boolean; onChange: () => void; co
 
 export default function MyProfileScreen() {
   const { theme, setTheme } = useTheme();
+  const [isEditing, setIsEditing] = useState(false);
+  const [profile, setProfile] = useState<EditableProfile>({
+    name: myProfile.name,
+    job: myProfile.job,
+    location: myProfile.location,
+    bio: myProfile.bio,
+    intent: myProfile.intent,
+    kids: myProfile.kids,
+    status: "이혼 후 2년",
+    tags: [...myProfile.tags],
+  });
   const [showAlarm, setShowAlarm] = useState(false);
   const [alarms, setAlarms] = useState<AlarmState>({
     match: true,
@@ -47,6 +61,17 @@ export default function MyProfileScreen() {
 
   function toggleAlarm(id: keyof AlarmState) {
     setAlarms((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  if (isEditing) {
+    return (
+      <EditProfileScreen
+        initial={profile}
+        photo={myProfile.photo}
+        onSave={(p) => setProfile(p)}
+        onBack={() => setIsEditing(false)}
+      />
+    );
   }
 
   return (
@@ -60,6 +85,7 @@ export default function MyProfileScreen() {
         <div className="bg-white px-5 pt-10 pb-4 border-b border-gray-100 flex items-center justify-between">
           <h1 className="text-lg font-bold text-gray-900">내 프로필</h1>
           <button
+            onClick={() => setIsEditing(true)}
             className="text-xs font-medium px-3 py-1.5 rounded-full border"
             style={{ color: theme.primary, borderColor: `${theme.primary}40`, backgroundColor: theme.primaryMid }}
           >
@@ -67,14 +93,14 @@ export default function MyProfileScreen() {
           </button>
         </div>
 
-        {/* Profile card */}
-        <div className="bg-white mx-4 mt-4 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-          <div className="h-28 overflow-hidden bg-gray-100">
-            <img src={myProfile.photo} alt={myProfile.name} className="w-full h-full object-cover object-top" />
+        {/* Profile header — 전체 너비, 카드 없음 */}
+        <div className="bg-white border-b border-gray-100">
+          <div className="h-36 overflow-hidden bg-gray-100">
+            <img src={myProfile.photo} alt={profile.name} className="w-full h-full object-cover object-top" />
           </div>
           <div className="px-5 py-4">
             <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-lg font-bold text-gray-900">{myProfile.name}</h2>
+              <h2 className="text-lg font-bold text-gray-900">{profile.name}</h2>
               <span
                 className="text-[11px] font-medium border px-2 py-0.5 rounded-full"
                 style={{ color: theme.primary, borderColor: `${theme.primary}40`, backgroundColor: theme.primaryMid }}
@@ -82,7 +108,7 @@ export default function MyProfileScreen() {
                 인증됨 ✓
               </span>
             </div>
-            <p className="text-gray-400 text-xs mb-4">{myProfile.age}세 · {myProfile.location} · {myProfile.job}</p>
+            <p className="text-gray-400 text-xs mb-4">{myProfile.age}세 · {profile.location} · {profile.job}</p>
 
             <div className="grid grid-cols-3 gap-2 mb-4">
               {[
@@ -98,7 +124,7 @@ export default function MyProfileScreen() {
             </div>
 
             <div className="flex flex-wrap gap-1.5">
-              {myProfile.tags.map((tag) => (
+              {profile.tags.map((tag) => (
                 <span key={tag} className="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full">{tag}</span>
               ))}
             </div>
@@ -107,7 +133,7 @@ export default function MyProfileScreen() {
 
         {/* Profile info sections */}
         <div className="mx-4 mt-3 space-y-2">
-          {profileSections.map((s) => (
+          {profileSections(profile).map((s) => (
             <div key={s.label} className="bg-white rounded-xl px-4 py-3.5 flex items-start gap-3 border border-gray-100">
               <span className="text-base mt-0.5">{s.icon}</span>
               <div className="flex-1 min-w-0">

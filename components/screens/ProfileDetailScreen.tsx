@@ -30,7 +30,7 @@ export default function ProfileDetailScreen({
       {/* Photo — 사진 탭하면 뒤로가기 */}
       <div
         className="relative overflow-hidden bg-gray-100 shrink-0 cursor-pointer"
-        style={{ height: 400 }}
+        style={{ height: 260 }}
         onClick={onBack}
       >
         <img
