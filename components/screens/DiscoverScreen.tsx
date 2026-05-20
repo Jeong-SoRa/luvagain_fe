@@ -220,20 +220,17 @@ function CardContent({
               {profile.bio}
             </p>
           </div>
-          {/* Bottom frosted glass panel — profile info + buttons */}
+          {/* Bottom panel — profile info + buttons */}
           <div
-            className="absolute bottom-0 left-0 right-0 rounded-b-3xl px-5 pt-4 pb-5"
-            style={{
-              background: "linear-gradient(to bottom, transparent 0%, transparent calc(100% - 60px), rgba(10,10,10,0.7) 100%)",
-            }}
+            className="absolute bottom-0 left-0 right-0 rounded-b-3xl pr-5 pt-4 pb-5"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Name row */}
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-bold text-[23px] tracking-tight leading-none" style={{ color: "#3B1F0E", textShadow: "0 0 8px rgba(255,255,255,0.9), 0 1px 2px rgba(255,255,255,0.7)" }}>
+            <div className="flex items-center gap-2 mb-1 px-2.5 py-1" style={{ marginLeft: 15, marginRight: 15, background: "linear-gradient(to top, rgba(255,255,255,0.55), rgba(255,255,255,0.15))", borderRadius: `4px` }}>
+              <span className="font-bold text-[23px] tracking-tight leading-none text-black">
                 {profile.name}
               </span>
-              <span className="text-base font-semibold" style={{ color: "#6B3A22", textShadow: "0 0 6px rgba(255,255,255,0.8)" }}>{profile.age}</span>
+              <span className="text-base font-semibold text-black">{profile.age}</span>
               {profile.verified && (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
                   <circle cx="12" cy="8" r="4" fill="#FFD700" stroke="#FFA500" strokeWidth="1"/>
@@ -244,9 +241,9 @@ function CardContent({
             </div>
 
             {/* Job · Location */}
-            <p className="text-[13px] font-semibold mb-2" style={{ color: "#7A4530", textShadow: "0 0 6px rgba(255,255,255,0.8)" }}>
+            <div className="flex items-center text-[13px] font-semibold mb-2 px-2 py-0.5 text-black" style={{ marginLeft: 15, marginRight: 15, background: "linear-gradient(to top, rgba(255,255,255,0.50), rgba(255,255,255,0.12))", borderRadius: `4px`  }}>
               {profile.job} · {profile.location}
-            </p>
+            </div>
 
 
 

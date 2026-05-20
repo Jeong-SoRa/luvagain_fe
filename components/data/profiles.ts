@@ -20,6 +20,8 @@ export type Profile = {
   smoking: string;
   drinking: string;
   matchScore: number;
+  photos?: string[];
+  captions?: string[];
 };
 
 export type ChatMessage = {
@@ -57,6 +59,17 @@ export const profiles: Profile[] = [
     smoking: "비흡연",
     drinking: "가끔",
     matchScore: 97,
+    photos: [
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&h=500&q=80",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=500&q=80",
+      "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=400&h=500&q=80",
+    ],
+    captions: [
+      "프로필 사진입니다 😊",
+      "주말 등산 다녀왔어요. 북한산 정상!",
+      "요즘 즐겨 읽는 책들과 함께",
+      "친구들이랑 마포 카페에서",
+    ],
   },
   {
     id: 2,
@@ -80,6 +93,16 @@ export const profiles: Profile[] = [
     smoking: "비흡연",
     drinking: "즐김",
     matchScore: 94,
+    photos: [
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=500&q=80",
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=500&q=80",
+      "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=400&h=500&q=80",
+    ],
+    captions: [
+      "반갑습니다 🙂",
+      "골프 라운딩 후 한 컷",
+      "딸이랑 제주도 여행",
+    ],
   },
   {
     id: 3,
@@ -102,6 +125,10 @@ export const profiles: Profile[] = [
     smoking: "비흡연",
     drinking: "가끔",
     matchScore: 91,
+    photos: [
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=500&q=80",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=500&q=80",
+    ],
   },
   {
     id: 4,
