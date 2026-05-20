@@ -57,7 +57,7 @@ export default function DiscoverScreen({
           <div>
             <h1 className="text-lg font-bold text-gray-900">다시, 3일</h1>
             <p className="text-xs text-gray-400 mt-0.5">
-              오늘의 추천 {profiles.length}명
+              단 3시간의 만남 {profiles.length}명
               {heldCount > 0 && (
                 <span className="ml-2 text-amber-500 font-semibold">· 보류 {heldCount}명</span>
               )}
@@ -79,35 +79,36 @@ export default function DiscoverScreen({
         </div>
       </div>
 
-      {/* Progress */}
-      <div className="flex gap-1 px-5 py-2.5">
-        {profiles.map((_, i) => (
-          <div
-            key={i}
-            className="h-0.5 flex-1 rounded-full transition-all"
-            style={{
-              backgroundColor:
-                i < index ? `${theme.primary}60` : i === index ? theme.primary : "#E5E7EB",
-            }}
-          />
-        ))}
-      </div>
-
       {/* Card stack */}
-      <div className="flex-1 relative px-4 pt-1 pb-5 flex items-center">
+      <div className="flex-1 relative">
+        {/* Progress — overlaid on card */}
+        {!done && (
+          <div className="absolute top-3 left-8 right-8 flex gap-2 z-10">
+            {profiles.map((_, i) => (
+              <div
+                key={i}
+                className="h-0.5 flex-1 rounded-full transition-all"
+                style={{
+                  backgroundColor:
+                    i < index ? `${theme.primary}90` : i === index ? theme.primary : `${theme.primary}30`,
+                }}
+              />
+            ))}
+          </div>
+        )}
         {done ? (
           <DoneState countdown={countdown} theme={theme} onReset={() => setIndex(0)} />
         ) : (
-          <div className="relative w-full h-full" >
+          <div className="absolute inset-0">
             {/* Next card peek */}
             {next && (
-              <div className="absolute inset-x-4 top-3 bottom-0 rounded-3xl overflow-hidden shadow-sm">
+              <div className="absolute inset-x-4 top-3 bottom-0 rounded-none overflow-hidden shadow-sm">
                 <CardContent profile={next} theme={theme} mini />
               </div>
             )}
             {/* Current card */}
             <div
-              className="absolute inset-0 rounded-3xl overflow-hidden shadow-xl transition-all duration-300"
+              className="absolute inset-0 overflow-hidden shadow-xl transition-all duration-300"
               style={{
                 transform:
                   action === "like" ? "translateX(50px) rotate(4deg)"
@@ -188,10 +189,16 @@ function CardContent({
         className="absolute inset-0 w-full h-full object-cover"
       />
 
+      {/* Top fade — image blends into header */}
+      <div
+        className="absolute inset-x-0 top-0 h-12 pointer-events-none"
+        style={{ background: "linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)" }}
+      />
+
       {!mini && (
         <>
           {/* Intent tag — top left */}
-          <div className="absolute top-4 left-4">
+          <div className="absolute top-10 left-4">
             <span
               className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white uppercase"
               style={{ letterSpacing: "0.06em" }}
@@ -201,14 +208,14 @@ function CardContent({
           </div>
 
           {/* Match score — top right */}
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-10 right-4">
             <span className="bg-black/40 backdrop-blur-sm text-[11px] font-semibold px-2.5 py-1 rounded-full text-white tracking-wide">
               {profile.matchScore}% 일치
             </span>
           </div>
 
           {/* Bio preview — right aligned, below match score */}
-          <div className="absolute top-14 right-4 pr-1" style={{ width: "70%" }}>
+          <div className="absolute top-20 right-4 pr-1" style={{ width: "70%" }}>
             <p className="text-white/100 text-[12px] leading-[1.55] line-clamp-2 text-right" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>
               {profile.bio}
             </p>
@@ -270,8 +277,9 @@ function CardContent({
                   className="rounded-full flex items-center justify-center shadow-2xl"
                   style={{ width: 62, height: 62, backgroundColor: theme.primary }}
                 >
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="white" />
+                    <text x="12" y="13.5" textAnchor="middle" fontSize="6.5" fontWeight="800" fill={theme.primary} fontFamily="system-ui, sans-serif">3+</text>
                   </svg>
                 </div>
                 <span className="text-[10px] text-white font-semibold">3일 채팅</span>

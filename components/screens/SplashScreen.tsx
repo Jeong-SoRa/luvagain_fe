@@ -22,14 +22,6 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
         className="flex flex-col items-center gap-5 transition-all duration-500"
         style={{ opacity: phase === "in" ? 0 : 1, transform: phase === "in" ? "translateY(12px)" : "translateY(0)" }}
       >
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)" }}>
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <path
-              d="M16 27S4 20 4 11.5A7.5 7.5 0 0 1 16 6a7.5 7.5 0 0 1 12 5.5C28 20 16 27 16 27z"
-              fill={theme.primary}
-            />
-          </svg>
-        </div>
         <div className="text-center">
           <h1 className="text-white text-3xl font-bold tracking-tight">다시, 3일</h1>
           <p className="text-white/40 text-sm mt-1.5 font-light tracking-widest">3일의 설렘, 그리고 선택</p>
