@@ -226,11 +226,11 @@ function CardContent({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Name row */}
-            <div className="flex items-center gap-2 mb-1 px-2.5 py-1" style={{ marginLeft: 15, marginRight: 15, background: "linear-gradient(to top, rgba(255,255,255,0.55), rgba(255,255,255,0.15))", borderRadius: `4px` }}>
-              <span className="font-bold text-[23px] tracking-tight leading-none text-black">
+            <div className="flex items-center gap-2 px-2.5 py-0" style={{ marginLeft: 15, marginRight: 15 }}>
+              <span className="font-bold text-[23px] tracking-tight leading-[1.55] text-white/100">
                 {profile.name}
               </span>
-              <span className="text-base font-semibold text-black">{profile.age}</span>
+              <span className="text-base font-semibold leading-[1.55] text-white/100">{profile.age}</span>
               {profile.verified && (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
                   <circle cx="12" cy="8" r="4" fill="#FFD700" stroke="#FFA500" strokeWidth="1"/>
@@ -241,7 +241,7 @@ function CardContent({
             </div>
 
             {/* Job · Location */}
-            <div className="flex items-center text-[13px] font-semibold mb-2 px-2 py-0.5 text-black" style={{ marginLeft: 15, marginRight: 15, background: "linear-gradient(to top, rgba(255,255,255,0.50), rgba(255,255,255,0.12))", borderRadius: `4px`  }}>
+            <div className="flex items-center text-[13px] font-semibold leading-[1.55] mb-2 px-2 py-0.5 text-white/100" style={{ marginLeft: 15, marginRight: 15 }}>
               {profile.job} · {profile.location}
             </div>
 
