@@ -15,61 +15,85 @@ const detailRows = (p: Profile) => [
 ];
 
 export default function ProfileDetailScreen({
-  profile, onBack, onLike, onPass,
+  profile, onBack, onLike, onPass, onHold,
 }: {
   profile: Profile;
   onBack: () => void;
   onLike: (p: Profile) => void;
   onPass: () => void;
+  onHold: (p: Profile) => void;
 }) {
   const { theme } = useTheme();
 
   return (
     <div className="flex flex-col h-full bg-white overflow-y-auto">
-      {/* Photo */}
-      <div className="relative overflow-hidden bg-gray-100 shrink-0" style={{ height: 280 }}>
+      {/* Photo — 사진 탭하면 뒤로가기 */}
+      <div
+        className="relative overflow-hidden bg-gray-100 shrink-0 cursor-pointer"
+        style={{ height: 400 }}
+        onClick={onBack}
+      >
         <img
           src={profile.photo}
           alt={profile.name}
           className="w-full h-full object-cover"
         />
-        {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
 
+        {/* Back button */}
         <button
-          onClick={onBack}
-          className="absolute top-10 left-4 w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center"
+          onClick={(e) => { e.stopPropagation(); onBack(); }}
+          className="absolute top-10 left-4 w-9 h-9 rounded-full bg-black/25 backdrop-blur-sm flex items-center justify-center"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
             <path d="M19 12H5M12 5l-7 7 7 7" />
           </svg>
         </button>
 
+        {/* Verified badge */}
         {profile.verified && (
-          <div className="absolute top-10 right-4 bg-white/70 backdrop-blur-sm text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1" style={{ color: theme.primary }}>
-            ✓ 인증됨
+          <div className="absolute top-10 right-4 bg-black/30 backdrop-blur-sm text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1.5 text-white">
+            <div
+              className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: theme.primary }}
+            >
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            인증됨
           </div>
         )}
 
-        <div className="absolute bottom-4 right-4 bg-white rounded-xl px-3 py-1.5 shadow-sm">
+        {/* Intent tag — 사진 하단 좌측 */}
+        <div className="absolute bottom-4 left-4">
+          <span className="text-[12px] font-medium px-3 py-1.5 rounded-full border border-white/40 bg-white/20 text-white backdrop-blur-sm">
+            {profile.intent}
+          </span>
+        </div>
+
+        {/* Match score — 사진 하단 우측 */}
+        <div className="absolute bottom-4 right-4 bg-white/90 rounded-xl px-3 py-1.5 shadow-sm">
           <span className="font-bold text-sm" style={{ color: theme.primary }}>{profile.matchScore}%</span>
           <span className="text-gray-400 text-xs ml-1">일치</span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-5 py-5">
-        <div className="flex items-start justify-between mb-1">
-          <h2 className="text-2xl font-bold text-gray-900">{profile.name}</h2>
-          <span
-            className="text-xs font-medium border px-2.5 py-1 rounded-full"
-            style={{ color: theme.primary, borderColor: `${theme.primary}40`, backgroundColor: theme.primaryMid }}
-          >
-            {profile.intent}
-          </span>
+      <div className="flex-1 px-5 py-4">
+        {/* Name + age */}
+        <div className="mb-0.5">
+          <h2 className="text-2xl font-bold text-gray-900 inline">{profile.name}</h2>
+          <span className="text-gray-400 font-light text-xl ml-2">{profile.age}</span>
         </div>
-        <p className="text-gray-400 text-sm mb-5">{profile.location} · {profile.job}</p>
 
+        {/* Location · Job */}
+        <p className="text-gray-400 text-sm mb-2.5">{profile.location} · {profile.job}</p>
+
+        {/* Bio preview — 자기소개 앞 2줄 */}
+        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-5">{profile.bio}</p>
+
+        {/* Full bio card */}
         <div className="bg-gray-50 rounded-xl p-4 mb-5">
           <p className="text-[11px] font-semibold text-gray-400 mb-2 uppercase tracking-wide">자기소개</p>
           <p className="text-gray-700 text-sm leading-relaxed">{profile.bio}</p>
@@ -78,6 +102,7 @@ export default function ProfileDetailScreen({
           )}
         </div>
 
+        {/* Tags */}
         <div className="mb-5">
           <p className="text-[11px] font-semibold text-gray-400 mb-2.5 uppercase tracking-wide">관심사</p>
           <div className="flex flex-wrap gap-2">
@@ -89,6 +114,7 @@ export default function ProfileDetailScreen({
           </div>
         </div>
 
+        {/* Info grid */}
         <div className="mb-6">
           <p className="text-[11px] font-semibold text-gray-400 mb-2.5 uppercase tracking-wide">기본 정보</p>
           <div className="grid grid-cols-2 gap-2">
@@ -103,7 +129,7 @@ export default function ProfileDetailScreen({
       </div>
 
       {/* Sticky CTA */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-100 px-5 py-4 flex gap-3">
+      <div className="sticky bottom-0 bg-white border-t border-gray-100 px-5 py-4 flex gap-2.5">
         <button
           onClick={onPass}
           className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-500 font-medium text-sm active:bg-gray-50"
@@ -111,8 +137,15 @@ export default function ProfileDetailScreen({
           패스
         </button>
         <button
+          onClick={() => onHold(profile)}
+          className="flex-1 py-3 rounded-xl border font-medium text-sm active:opacity-80"
+          style={{ color: theme.primary, borderColor: `${theme.primary}60`, backgroundColor: theme.primarySoft }}
+        >
+          보류
+        </button>
+        <button
           onClick={() => onLike(profile)}
-          className="flex-2 px-8 py-3 rounded-xl text-white font-semibold text-sm active:opacity-90"
+          className="flex-[1.4] py-3 rounded-xl text-white font-semibold text-sm active:opacity-90"
           style={{ backgroundColor: theme.primary }}
         >
           좋아요

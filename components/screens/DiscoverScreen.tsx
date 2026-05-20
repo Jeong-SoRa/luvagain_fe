@@ -191,7 +191,7 @@ function CardContent({
           </div>
 
           {/* Profile info */}
-          <div className="absolute left-5 right-5 bottom-[92px]">
+          <div className="absolute left-5 right-5 bottom-[120px]">
             {/* Name row */}
             <div className="flex items-center gap-2 mb-1">
               <span className="font-bold text-white text-[23px] tracking-tight leading-none">
@@ -223,42 +223,55 @@ function CardContent({
 
           {/* Action buttons inside card */}
           <div
-            className="absolute bottom-0 left-0 right-0 pb-5 flex items-center justify-center gap-6"
+            className="absolute bottom-0 left-0 right-0 pb-5 flex items-end justify-center gap-6"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Pass */}
             <button
               onClick={() => onAction?.("pass")}
-              className="w-14 h-14 rounded-full flex items-center justify-center active:scale-90 transition-transform"
-              style={{ backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.3)" }}
+              className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M18 6 6 18M6 6l12 12" />
-              </svg>
+              <div
+                className="w-14 h-14 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.3)" }}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </div>
+              <span className="text-[10px] text-white/80 font-medium">패스</span>
             </button>
 
             {/* Like — 3일 채팅 */}
             <button
               onClick={() => onAction?.("like")}
-              className="rounded-full flex flex-col items-center justify-center gap-0.5 shadow-2xl active:scale-90 transition-transform"
-              style={{ width: 72, height: 72, backgroundColor: theme.primary }}
+              className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
             >
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </svg>
-              <span className="text-white text-[9px] font-semibold tracking-wide opacity-90">3일 채팅</span>
+              <div
+                className="rounded-full flex items-center justify-center shadow-2xl"
+                style={{ width: 72, height: 72, backgroundColor: theme.primary }}
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </div>
+              <span className="text-[10px] text-white font-semibold">3일 채팅</span>
             </button>
 
             {/* Hold */}
             <button
               onClick={() => onAction?.("hold")}
-              className="w-14 h-14 rounded-full flex items-center justify-center active:scale-90 transition-transform"
-              style={{ backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.3)" }}
+              className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-                <circle cx="12" cy="12" r="9" />
-                <polyline points="12 7 12 12 15.5 14" />
-              </svg>
+              <div
+                className="w-14 h-14 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.3)" }}
+              >
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </div>
+              <span className="text-[10px] text-white/80 font-medium">보류</span>
             </button>
           </div>
         </>

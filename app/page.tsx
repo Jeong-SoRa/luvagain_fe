@@ -81,6 +81,7 @@ function AppContent() {
             onBack={() => { setSubScreen(null); setSelectedProfile(null); }}
             onLike={handleLike}
             onPass={() => { setSubScreen(null); setSelectedProfile(null); }}
+            onHold={handleHold}
           />
         ) : subScreen === "chat" && selectedProfile ? (
           <ChatScreen
