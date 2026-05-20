@@ -37,7 +37,7 @@ export default function DiscoverScreen({
   const current = profiles[index];
   const next = profiles[index + 1];
   const done = index >= profiles.length;
-  const countdown = useCountdown(REFRESH_SECONDS, done);
+  const countdown = useCountdown(REFRESH_SECONDS, true);
 
   function handleAction(type: "like" | "pass" | "hold") {
     setAction(type);
@@ -52,21 +52,31 @@ export default function DiscoverScreen({
   return (
     <div className="flex flex-col h-full bg-[#F0EFED]">
       {/* Header */}
-      <div className="px-5 pt-10 pb-3 bg-white flex items-center justify-between border-b border-gray-100">
-        <div>
-          <h1 className="text-lg font-bold text-gray-900">다시, 3일</h1>
-          <p className="text-xs text-gray-400 mt-0.5">
-            오늘의 추천 {profiles.length}명
-            {heldCount > 0 && (
-              <span className="ml-2 text-amber-500 font-semibold">· 보류 {heldCount}명</span>
-            )}
-          </p>
+      <div className="px-5 pt-10 pb-3 bg-white border-b border-gray-100">
+        <div className="flex items-start justify-between mb-2.5">
+          <div>
+            <h1 className="text-lg font-bold text-gray-900">다시, 3일</h1>
+            <p className="text-xs text-gray-400 mt-0.5">
+              오늘의 추천 {profiles.length}명
+              {heldCount > 0 && (
+                <span className="ml-2 text-amber-500 font-semibold">· 보류 {heldCount}명</span>
+              )}
+            </p>
+          </div>
         </div>
-        <button className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="1.8">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-        </button>
+        {/* Countdown — centered */}
+        <div className="flex justify-center">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gray-50 border border-gray-100">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-[10px] text-gray-400">떠나기까지 남은시간</span>
+              <span className="text-[13px] font-mono font-semibold text-gray-600">{countdown}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Progress */}
@@ -88,7 +98,7 @@ export default function DiscoverScreen({
         {done ? (
           <DoneState countdown={countdown} theme={theme} onReset={() => setIndex(0)} />
         ) : (
-          <div className="relative w-full" style={{ height: 480 }}>
+          <div className="relative w-full h-full" >
             {/* Next card peek */}
             {next && (
               <div className="absolute inset-x-4 top-3 bottom-0 rounded-3xl overflow-hidden shadow-sm">
@@ -180,8 +190,15 @@ function CardContent({
 
       {!mini && (
         <>
-          {/* Gradient — strong bottom for text, subtle top */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/5" />
+          {/* Intent tag — top left */}
+          <div className="absolute top-4 left-4">
+            <span
+              className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white uppercase"
+              style={{ letterSpacing: "0.06em" }}
+            >
+              ♥ {profile.intent}
+            </span>
+          </div>
 
           {/* Match score — top right */}
           <div className="absolute top-4 right-4">
@@ -190,89 +207,92 @@ function CardContent({
             </span>
           </div>
 
-          {/* Profile info */}
-          <div className="absolute left-5 right-5 bottom-[120px]">
+          {/* Bio preview — right aligned, below match score */}
+          <div className="absolute top-14 right-4 pr-1" style={{ width: "70%" }}>
+            <p className="text-white/100 text-[12px] leading-[1.55] line-clamp-2 text-right" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>
+              {profile.bio}
+            </p>
+          </div>
+          {/* Bottom frosted glass panel — profile info + buttons */}
+          <div
+            className="absolute bottom-0 left-0 right-0 rounded-b-3xl px-5 pt-4 pb-5"
+            style={{
+              background: "linear-gradient(to bottom, transparent 0%, transparent calc(100% - 60px), rgba(10,10,10,0.7) 100%)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Name row */}
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-bold text-white text-[23px] tracking-tight leading-none">
+              <span className="font-bold text-[23px] tracking-tight leading-none" style={{ color: "#3B1F0E", textShadow: "0 0 8px rgba(255,255,255,0.9), 0 1px 2px rgba(255,255,255,0.7)" }}>
                 {profile.name}
               </span>
-              <span className="text-white/75 text-lg font-light">{profile.age}</span>
+              <span className="text-base font-semibold" style={{ color: "#6B3A22", textShadow: "0 0 6px rgba(255,255,255,0.8)" }}>{profile.age}</span>
               {profile.verified && (
-                <div
-                  className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: theme.primary }}
-                >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                  <circle cx="12" cy="8" r="4" fill="#FFD700" stroke="#FFA500" strokeWidth="1"/>
+                  <path d="M8 12 L6 21 L12 18 L18 21 L16 12" fill="#FFD700" stroke="#FFA500" strokeWidth="1" strokeLinejoin="round"/>
+                  <circle cx="12" cy="8" r="2" fill="#FFA500"/>
+                </svg>
               )}
             </div>
 
-            {/* Location · Job */}
-            <p className="text-white/65 text-[13px] mb-3">
+            {/* Job · Location */}
+            <p className="text-[13px] font-semibold mb-2" style={{ color: "#7A4530", textShadow: "0 0 6px rgba(255,255,255,0.8)" }}>
               {profile.job} · {profile.location}
             </p>
 
-            {/* Intent tag */}
-            <span className="text-[12px] font-medium px-3 py-1 rounded-full border border-white/35 bg-white/15 text-white backdrop-blur-sm">
-              {profile.intent}
-            </span>
-          </div>
 
-          {/* Action buttons inside card */}
-          <div
-            className="absolute bottom-0 left-0 right-0 pb-5 flex items-end justify-center gap-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Pass */}
-            <button
-              onClick={() => onAction?.("pass")}
-              className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
-            >
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.3)" }}
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </div>
-              <span className="text-[10px] text-white/80 font-medium">패스</span>
-            </button>
 
-            {/* Like — 3일 채팅 */}
-            <button
-              onClick={() => onAction?.("like")}
-              className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
-            >
-              <div
-                className="rounded-full flex items-center justify-center shadow-2xl"
-                style={{ width: 72, height: 72, backgroundColor: theme.primary }}
+            {/* Action buttons */}
+            <div className="flex items-center justify-center gap-4">
+              {/* Pass */}
+              <button
+                onClick={() => onAction?.("pass")}
+                className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
               >
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </div>
-              <span className="text-[10px] text-white font-semibold">3일 채팅</span>
-            </button>
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "rgba(220,38,38,0.35)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(248,113,113,0.5)" }}
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FCA5A5" strokeWidth="2.5" strokeLinecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </div>
+                <span className="text-[10px] font-medium" style={{ color: "rgba(252,165,165,0.9)" }}>패스</span>
+              </button>
 
-            {/* Hold */}
-            <button
-              onClick={() => onAction?.("hold")}
-              className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
-            >
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(255,255,255,0.3)" }}
+              {/* Like — 3일 채팅 */}
+              <button
+                onClick={() => onAction?.("like")}
+                className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
               >
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                </svg>
-              </div>
-              <span className="text-[10px] text-white/80 font-medium">보류</span>
-            </button>
+                <div
+                  className="rounded-full flex items-center justify-center shadow-2xl"
+                  style={{ width: 62, height: 62, backgroundColor: theme.primary }}
+                >
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </div>
+                <span className="text-[10px] text-white font-semibold">3일 채팅</span>
+              </button>
+
+              {/* Hold */}
+              <button
+                onClick={() => onAction?.("hold")}
+                className="flex flex-col items-center gap-1.5 active:scale-90 transition-transform"
+              >
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "rgba(202,138,4,0.30)", backdropFilter: "blur(8px)", border: "1.5px solid rgba(253,224,71,0.45)" }}
+                >
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#FDE047" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg>
+                </div>
+                <span className="text-[10px] font-medium" style={{ color: "rgba(253,224,71,0.9)" }}>보류</span>
+              </button>
+            </div>
           </div>
         </>
       )}

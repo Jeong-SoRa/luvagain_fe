@@ -79,18 +79,17 @@ export default function ThemeSelector() {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button — top-left, icon only */}
       <button
         onClick={() => setOpen(true)}
         title="프로토타입 가이드"
-        className="absolute z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full shadow-lg border border-white/20 text-white text-xs font-semibold"
-        style={{ bottom: 72 + 12, right: 12, backgroundColor: theme.primary }}
+        className="absolute z-30 w-7 h-7 rounded-full flex items-center justify-center shadow-sm border border-white/30"
+        style={{ top: 10, left: 10, backgroundColor: `${theme.primary}CC` }}
       >
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
           <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
           <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
         </svg>
-        팀 가이드
       </button>
 
       {/* Bottom sheet */}
