@@ -28,6 +28,14 @@ Flutter 앱과 독립적으로 채팅 서버/매칭 서버가 살아있는지 �
 
 ## Cron 주기 관련 주의사항
 
-`vercel.json`에 10분마다(`*/10 * * * *`) 실행되도록 설정했지만, **Vercel Hobby(무료) 플랜은
-Cron Job이 하루 1회만 실제로 트리거됩니다.** 더 자주 확인하려면 Pro 플랜으로 올리거나,
-cron-job.org 같은 외부 무료 크론 서비스로 배포된 `/api/check` URL을 원하는 주기로 호출하세요.
+**Vercel Hobby(무료) 플랜은 하루 1회보다 자주 도는 cron 표현식은 배포 자체를 거부합니다**
+("Hobby accounts are limited to daily cron jobs" 에러). 그래서 `vercel.json`의 cron은
+`0 0 * * *`(매일 자정 UTC 1회)로 맞춰뒀습니다.
+
+더 자주(예: 10분마다) 확인하고 싶다면 둘 중 하나를 선택하세요:
+
+1. **Vercel Pro 플랜으로 업그레이드** — 이후 `vercel.json`의 schedule을 원하는 주기로 바꾸면 됩니다.
+2. **외부 무료 크론 서비스 사용** (Pro 없이 가능) — [cron-job.org](https://cron-job.org) 같은
+   서비스에 배포된 `https://<your-domain>/api/check` URL을 원하는 주기로 호출하도록 등록하세요.
+   `CRON_SECRET`을 설정해뒀다면, 그 서비스의 "커스텀 헤더" 설정에
+   `Authorization: Bearer <CRON_SECRET>`을 추가해야 401 없이 동작합니다.
