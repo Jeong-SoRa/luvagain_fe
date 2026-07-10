@@ -8,5 +8,8 @@
       "main": true,
       "prototype": true
     }
-  }
+  },
+  "crons": [
+    { "path": "/api/check", "schedule": "*/10 * * * *" }
+  ]
 }

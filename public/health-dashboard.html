@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>LoveAgain 서버 상태</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body { font-family: -apple-system, sans-serif; background: #F9FAFB; color: #111827; margin: 0; padding: 24px; }
+  h1 { font-size: 18px; margin-bottom: 16px; }
+  .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #F3F4F6; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+  .ok { color: #10B981; font-weight: 700; }
+  .fail { color: #EF4444; font-weight: 700; }
+  .ts { color: #9CA3AF; font-size: 12px; }
+  button { background: #EC4899; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  td, th { text-align: left; padding: 6px 4px; border-bottom: 1px solid #F3F4F6; }
+</style>
+</head>
+<body>
+  <h1>LoveAgain 백엔드 상태</h1>
+  <div class="card">
+    <button onclick="runCheckNow()">지금 바로 확인</button>
+    <span id="status-msg" class="ts"></span>
+  </div>
+  <div id="latest" class="card">불러오는 중...</div>
+  <div class="card">
+    <table>
+      <thead><tr><th>시각</th><th>chat_http</th><th>match_http</th><th>chat_socket</th></tr></thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+
+<script>
+function badge(check) {
+  if (!check) return '<span class="ts">-</span>';
+  const cls = check.ok ? 'ok' : 'fail';
+  const label = check.ok ? 'OK' : 'FAIL';
+  const detail = check.status || check.detail || check.error || '';
+  return `<span class="${cls}">${label}</span> <span class="ts">${check.latencyMs}ms ${detail}</span>`;
+}
+
+function findCheck(entry, name) {
+  return entry.checks.find((c) => c.name === name);
+}
+
+async function loadHistory() {
+  const res = await fetch('/api/history?limit=50');
+  const data = await res.json();
+  const entries = data.entries || [];
+
+  const latestEl = document.getElementById('latest');
+  if (entries.length === 0) {
+    latestEl.innerHTML = '아직 기록된 데이터가 없습니다. "지금 바로 확인"을 눌러보세요.';
+  } else {
+    const e = entries[0];
+    latestEl.innerHTML = `
+      <div class="ts">최근 확인: ${new Date(e.timestamp).toLocaleString('ko-KR')}</div>
+      <div class="row"><span>채팅 서버 HTTP</span>${badge(findCheck(e, 'chat_http'))}</div>
+      <div class="row"><span>매칭 서버 HTTP</span>${badge(findCheck(e, 'match_http'))}</div>
+      <div class="row"><span>채팅 소켓(인증 미들웨어 응답)</span>${badge(findCheck(e, 'chat_socket'))}</div>
+    `;
+  }
+
+  const body = document.getElementById('history-body');
+  body.innerHTML = entries.map((e) => `
+    <tr>
+      <td>${new Date(e.timestamp).toLocaleString('ko-KR')}</td>
+      <td>${badge(findCheck(e, 'chat_http'))}</td>
+      <td>${badge(findCheck(e, 'match_http'))}</td>
+      <td>${badge(findCheck(e, 'chat_socket'))}</td>
+    </tr>
+  `).join('');
+}
+
+async function runCheckNow() {
+  const msg = document.getElementById('status-msg');
+  msg.textContent = '확인 중...';
+  await fetch('/api/check');
+  msg.textContent = '완료';
+  await loadHistory();
+}
+
+loadHistory();
+</script>
+</body>
+</html>
